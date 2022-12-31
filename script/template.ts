@@ -17,7 +17,7 @@ export const testObject = (id: number) =>
       })
   `
 
-export const testYaml = (samples: Sample[]) => stringify({ cases: samples })
+export const testYaml = (samples: Sample[]) => stringify({ samples })
 
 const section = (sx: readonly string[]) => sx.map(x => `* ${x}`).concat('*')
 

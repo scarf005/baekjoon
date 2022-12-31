@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 import kotlin.reflect.KFunction
 
 @Serializable
-data class Examples(val cases: List<TestCase>) {
-    fun test(fn: () -> Unit) = cases.forAll { (input, output) ->
+data class Examples(val samples: List<TestCase>) {
+    fun test(fn: () -> Unit) = samples.forAll { (input, output) ->
         mock(input.trimIndent()) { fn() } shouldBe output.toOutput()
     }
 
