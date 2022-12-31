@@ -1,4 +1,4 @@
-cases:
+samples:
   - input: |-
       14
       push 1

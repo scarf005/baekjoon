@@ -1,5 +1,5 @@
-cases:
+samples:
   - input: |-
       1
       2
-    output: '3'
+    output: "3"
