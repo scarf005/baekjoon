@@ -1,0 +1,3 @@
+cases:
+  - input: 3 2
+    output: '1'
