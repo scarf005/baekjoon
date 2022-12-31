@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "query": "deno run --allow-net --allow-write --unstable script/main.ts"
+  }
+}

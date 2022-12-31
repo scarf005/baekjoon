@@ -1,5 +1,5 @@
-import { crawl, get } from './script/crawl.ts'
-import { problemText, testText, urlGen } from './script/template.ts'
+import { crawl, get } from './crawl.ts'
+import { problemText, testText, urlGen } from './template.ts'
 
 const pathGen = (id: number) => ({
   src: `src/main/kotlin/${id}.kt`,
@@ -21,7 +21,11 @@ const problem = async (id: number) => {
 }
 
 if (import.meta.main) {
-  Deno.args.map(Number).forEach(problem)
+  if (Deno.args.length === 0) {
+    console.log('no args provided.')
+  } else {
+    Deno.args.map(Number).forEach(problem)
+  }
 
   // const io = [
   //   1000, 1924, 2438, 2439, 2440, 2441, 2442, 2445, 2446, 2522, 2557, 2558,
