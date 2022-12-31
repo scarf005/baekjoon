@@ -1,23 +1,28 @@
 import { crawl, get } from './crawl.ts'
-import { problemText, testText, urlGen } from './template.ts'
+import { problemKDoc, testObject, testYaml, urlGen } from './template.ts'
 
 const pathGen = (id: number) => ({
   src: `src/main/kotlin/${id}.kt`,
   test: `src/test/kotlin/_${id}KtTest.kt`,
+  resources: `src/test/resources/${id}.yaml`,
 })
+
+const tryWrite = async (path: string, text: string) => {
+  try {
+    await Deno.writeTextFile(path, text, { createNew: true })
+  } catch (_) {
+    console.log(`File ${path} already exists, skipping`)
+  }
+}
 
 const problem = async (id: number) => {
   const url = urlGen(id)
-  const { src, test } = pathGen(id)
+  const { src, test, resources } = pathGen(id)
   const { meta, samples } = crawl(await get(url))
 
-  await Deno.writeTextFile(test, testText(id, samples))
-  try {
-    await Deno.writeTextFile(src, problemText(id, meta), { createNew: true })
-  } catch (_) {
-    console.log(problemText(id, meta))
-    console.log(`File ${src} already exists, skipping`)
-  }
+  await Deno.writeTextFile(resources, testYaml(samples))
+  await tryWrite(test, testObject(id))
+  await tryWrite(src, problemKDoc(id, meta))
 }
 
 if (import.meta.main) {
@@ -26,11 +31,4 @@ if (import.meta.main) {
   } else {
     Deno.args.map(Number).forEach(problem)
   }
-
-  // const io = [
-  //   1000, 1924, 2438, 2439, 2440, 2441, 2442, 2445, 2446, 2522, 2557, 2558,
-  //   2739, 2741, 2742, 8393, 10818, 10950, 10951, 10952, 10953, 10991, 10992,
-  //   11021, 11022, 11718, 11719, 11720, 11721,
-  // ]
-  // ;[1000, 1001, 2558, 10828].forEach(problem)
 }
