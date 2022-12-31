@@ -3,7 +3,7 @@ import { problemText, testText, urlGen } from './script/template.ts'
 
 const pathGen = (id: number) => ({
   src: `src/main/kotlin/${id}.kt`,
-  test: `src/test/kotlin/${id}.kt`,
+  test: `src/test/kotlin/_${id}KtTest.kt`,
 })
 
 const problem = async (id: number) => {

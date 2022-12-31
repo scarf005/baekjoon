@@ -9,21 +9,23 @@ export const testText = (id: number, samples: Sample[]) => {
 
   const testcase = (sample: Sample, i: number) => fmti`
       "case ${i}" {
-          mock(
+          val input =
               """
               ${fmti`${sample.input}`}
-              """.trimIndent()
-          ) { ${idName}() } shouldBe """
+              """
+          val output =
+              """
               ${fmti`${sample.output}`}
-          """.toOutput()
+              """
+          testCase(input, output, ::${idName})
       }
   `
 
   return fmti`
       import io.kotest.core.spec.style.StringSpec
-      import io.kotest.matchers.shouldBe
+      import utils.testCase
 
-      object ${idName} : StringSpec({
+      object _${id}KtTest : StringSpec({
           ${samples
             .map((s, i) => testcase(s, i + 1))
             .map(x => fmti`${x}`)
