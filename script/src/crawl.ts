@@ -5,21 +5,28 @@ import {
 import { Meta, Sample } from './types.ts'
 import { unescapeHtml } from 'https://deno.land/x/escape@1.4.2/mod.ts'
 
+const nbspRegex = new RegExp(String.fromCharCode(160), 'g')
+
 export const innerTextOfGen =
   (document: Document) =>
   (selector: string): string =>
-    unescapeHtml(document.querySelector(selector)!.innerHTML.trim())
-      .replaceAll(/<br>/g, '\n')
-      .replaceAll(/&nbsp;/g, ' ') as string
+    unescapeHtml(document.querySelector(selector)!.innerText)
+      .replace(/\n$/, '')
+      .replaceAll(nbspRegex, ' ') as string
 
 export const crawl = (
   document: Document
 ): { meta: Meta; samples: Sample[] } => {
   const innerTextOf = innerTextOfGen(document)
 
-  const title = innerTextOf('#problem_title')
-  const desc = innerTextOf('#problem_description')
-  const input = innerTextOf('#problem_input')
+  const meta = Object.fromEntries(
+    Object.entries({
+      title: '#problem_title',
+      desc: '#problem_description',
+      input: '#problem_input',
+      output: '#problem_output',
+    }).map(([key, value]) => [key, innerTextOf(value).trim()])
+  ) as Meta
 
   const length = document.querySelectorAll(
     '#problem-body > div > div.row'
@@ -29,7 +36,7 @@ export const crawl = (
     output: innerTextOf(`#sample-output-${i}`),
   }))
 
-  return { meta: { title, desc, input }, samples }
+  return { meta, samples }
 }
 
 const parser = new DOMParser()
