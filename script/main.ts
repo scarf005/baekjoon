@@ -1,6 +1,6 @@
 import { crawl, get } from './src/crawl.ts'
 import { problemKDoc, testObject, testYaml, urlGen } from './src/template.ts'
-
+import { brightYellow, brightGreen} from 'https://deno.land/std@0.167.0/fmt/colors.ts'
 const dirGen = (cls: number) => ({
   src: `src/main/kotlin/class${cls}`,
   test: `src/test/kotlin/class${cls}`,
@@ -20,9 +20,9 @@ const pathGen = (cls: number, id: number) => {
 const tryWrite = async (path: string, text: string) => {
   try {
     await Deno.writeTextFile(path, text, { createNew: true })
-    console.log(`write :: ${path}`)
+    console.log(brightGreen(`write :: ${path}`))
   } catch (_) {
-    console.log(`skip  :: ${path}`)
+    console.log(brightYellow(`skip  :: ${path}`))
   }
 }
 
