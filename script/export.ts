@@ -6,12 +6,14 @@ const problems = await recursiveReaddir('src/main/kotlin')
 
 const extract = (id: number, text: string) => {
   const signature = `fun \`${id}\`()`
+  const imports = text.match(/import .+/g)?.join('\n') ?? ''
   const start = text.indexOf(signature)
-  return text.substring(start).replace(signature, 'fun main()')
+  return [imports, text.substring(start).replace(signature, 'fun main()')]
+    .join('\n\n')
+    .trim()
 }
 
-if (import.meta.main) {
-  const id = Deno.args.map(Number)[0]
+const post = async (id: number) => {
   const problem = problems.find(file => file.endsWith(`${id}.kt`))
 
   if (problem) {
@@ -23,4 +25,8 @@ if (import.meta.main) {
   } else {
     console.log(`Problem ${id} not found`)
   }
+}
+
+if (import.meta.main) {
+  Promise.all(Deno.args.map(Number).map(post))
 }

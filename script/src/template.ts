@@ -1,4 +1,4 @@
-import { stringify } from 'https://deno.land/std@0.170.0/encoding/yaml.ts'
+import * as yaml from 'https://deno.land/std@0.170.0/encoding/yaml.ts'
 import { fmti } from 'https://raw.githubusercontent.com/scarf005/fmti/main/main.ts'
 import { Meta, Sample } from './types.ts'
 
@@ -21,23 +21,26 @@ export const testObject = (cls: number, id: number) =>
       })
   `
 
-export const testYaml = (samples: Sample[]) => stringify({ samples })
+export const testYaml = (samples: Sample[]) => yaml.stringify({ samples })
 
 const section = (sx: readonly string[]) => sx.map(x => `* ${x}`).concat('*')
 
 export const problemKDoc = (cls: number, id: number, meta: Meta) => {
-  const title = section([`# ${meta.title}`])
-  const desc = section([`## 문제`, ...meta.desc.split('\n')])
-  const input = section([`## 입력`, ...meta.input.split('\n')])
-  const all = [title, desc, input].flat().join('\n')
+  const lines = {
+    title: [`# ${meta.title}`],
+    desc: [`## 문제`, ...meta.desc.split('\n')],
+    input: [`## 입력`, ...meta.input.split('\n')],
+    output: [`## 출력`, ...meta.output.split('\n')],
+  }
+  const all = Object.values(lines).map(section).flat().join('\n')
 
   return fmti`
       ${packageGen(cls)}
 
       /**
        ${all}
-       * [See](${urlGen(id)})
        */
+      /** [See](${urlGen(id)}) */
       fun ${idNameGen(id)}(): Nothing = TODO()
     `
 }
