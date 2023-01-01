@@ -42,5 +42,5 @@ export const problemKDoc = (cls: number, id: number, meta: Meta) => {
        */
       /** [See](${urlGen(id)}) */
       fun ${idNameGen(id)}(): Nothing = TODO()
-    `
+    ` + '\n'
 }
