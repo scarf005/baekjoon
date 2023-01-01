@@ -1,11 +1,21 @@
-import { crawl, get } from './crawl.ts'
-import { problemKDoc, testObject, testYaml, urlGen } from './template.ts'
+import { crawl, get } from './src/crawl.ts'
+import { problemKDoc, testObject, testYaml, urlGen } from './src/template.ts'
 
-const pathGen = (id: number) => ({
-  src: `src/main/kotlin/${id}.kt`,
-  test: `src/test/kotlin/_${id}KtTest.kt`,
-  resources: `src/test/resources/${id}.yaml`,
+const dirGen = (cls: number) => ({
+  src: `src/main/kotlin/class${cls}`,
+  test: `src/test/kotlin/class${cls}`,
+  resources: `src/test/resources`,
 })
+
+const pathGen = (cls: number, id: number) => {
+  const { src, test, resources } = dirGen(cls)
+
+  return {
+    src: `${src}/${id}.kt`,
+    test: `${test}/_${id}KtTest.kt`,
+    resources: `${resources}/${id}.yaml`,
+  }
+}
 
 const tryWrite = async (path: string, text: string) => {
   try {
@@ -15,20 +25,29 @@ const tryWrite = async (path: string, text: string) => {
   }
 }
 
-const problem = async (id: number) => {
+const problem = async (cls: number, id: number) => {
   const url = urlGen(id)
-  const { src, test, resources } = pathGen(id)
+  const { src, test, resources } = pathGen(cls, id)
   const { meta, samples } = crawl(await get(url))
 
   await Deno.writeTextFile(resources, testYaml(samples))
-  await tryWrite(test, testObject(id))
-  await tryWrite(src, problemKDoc(id, meta))
+  await tryWrite(test, testObject(cls, id))
+  await tryWrite(src, problemKDoc(cls, id, meta))
 }
 
 if (import.meta.main) {
-  if (Deno.args.length === 0) {
-    console.log('no args provided.')
+  if (Deno.args.length <= 1) {
+    console.log('class and problem number required')
   } else {
-    Deno.args.map(Number).forEach(problem)
+    const [cls, ...problems] = Deno.args.map(Number)
+
+    await Promise.all(
+      Object.values(dirGen(cls)).map(dir =>
+        Deno.mkdir(dir, { recursive: true })
+      )
+    )
+
+    await Promise.all(problems.map(id => problem(cls, id)))
   }
 }
+  
