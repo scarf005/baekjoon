@@ -1,0 +1,7 @@
+samples:
+  - input: 10 10
+    output: 9 25
+  - input: 0 30
+    output: 23 45
+  - input: 23 40
+    output: 22 55
