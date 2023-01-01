@@ -3,11 +3,14 @@ import {
   DOMParser,
 } from 'https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts'
 import { Meta, Sample } from './types.ts'
+import { unescapeHtml } from 'https://deno.land/x/escape@1.4.2/mod.ts'
 
 export const innerTextOfGen =
   (document: Document) =>
   (selector: string): string =>
-    document.querySelector(selector)?.innerText.trim() as string
+    unescapeHtml(document.querySelector(selector)!.innerHTML.trim())
+      .replaceAll(/<br>/g, '\n')
+      .replaceAll(/&nbsp;/g, ' ') as string
 
 export const crawl = (
   document: Document
