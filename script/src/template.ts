@@ -38,6 +38,6 @@ export const problemKDoc = (cls: number, id: number, meta: Meta) => {
        ${all}
        * [See](${urlGen(id)})
        */
-      fun ${idNameGen(id)}() = TODO()
+      fun ${idNameGen(id)}(): Nothing = TODO()
     `
 }
