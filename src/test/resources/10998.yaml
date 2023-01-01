@@ -1,0 +1,5 @@
+samples:
+  - input: 1 2
+    output: '2'
+  - input: 3 4
+    output: '12'

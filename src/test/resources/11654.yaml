@@ -1,0 +1,13 @@
+samples:
+  - input: A
+    output: '65'
+  - input: C
+    output: '67'
+  - input: '0'
+    output: '48'
+  - input: '9'
+    output: '57'
+  - input: a
+    output: '97'
+  - input: z
+    output: '122'
