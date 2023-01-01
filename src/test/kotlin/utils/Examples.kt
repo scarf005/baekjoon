@@ -2,6 +2,7 @@ package utils
 
 import com.charleskorn.kaml.Yaml
 import io.kotest.inspectors.forAll
+import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KFunction
@@ -10,6 +11,11 @@ import kotlin.reflect.KFunction
 data class Examples(val samples: List<TestCase>) {
     fun test(fn: () -> Unit) = samples.forAll { (input, output) ->
         mock(input.trimIndent()) { fn() } shouldBe output.toOutput()
+    }
+
+    fun testNearEquality(fn: () -> Unit, tolerance: Double) = samples.forAll { (input, output) ->
+        mock(input.trimIndent()) { fn() }.let(String::toDouble)
+            .shouldBe(output.toOutput().toDouble() plusOrMinus tolerance)
     }
 
     companion object {
@@ -23,6 +29,12 @@ data class Examples(val samples: List<TestCase>) {
             val name = fn.name
             println("Testing $name")
             fromResource(name.toInt()).test(fn::call)
+        }
+
+        fun testNearEquality(fn: KFunction<*>, tolerance: Double = 1e-9) {
+            val name = fn.name
+            println("Testing $name")
+            fromResource(name.toInt()).testNearEquality(fn::call, tolerance)
         }
     }
 }
