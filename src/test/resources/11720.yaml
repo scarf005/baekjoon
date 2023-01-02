@@ -1,0 +1,17 @@
+samples:
+  - input: |-
+      1
+      1
+    output: '1'
+  - input: |-
+      5
+      54321
+    output: '15'
+  - input: |-
+      25
+      7000000000000000000000000
+    output: '7'
+  - input: |-
+      11
+      10987654321
+    output: '46'
