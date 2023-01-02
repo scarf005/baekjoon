@@ -2,12 +2,12 @@ import * as yaml from 'https://deno.land/std@0.170.0/encoding/yaml.ts'
 import { fmti } from 'https://raw.githubusercontent.com/scarf005/fmti/main/main.ts'
 import { Meta, Sample } from './types.ts'
 
-const packageGen = (cls: number) => `package class${cls}`
+const packageGen = (cls: string) => `package class${cls}`
 
 const idNameGen = (id: number) => `\`${id}\``
 export const urlGen = (id: number) => `https://www.acmicpc.net/problem/${id}`
 
-export const testObject = (cls: number, id: number) =>
+export const testObject = (cls: string, id: number) =>
   fmti`
       ${packageGen(cls)}
 
@@ -25,7 +25,7 @@ export const testYaml = (samples: Sample[]) => yaml.stringify({ samples })
 
 const section = (sx: readonly string[]) => sx.map(x => `* ${x}`).concat('*')
 
-export const problemKDoc = (cls: number, id: number, meta: Meta) => {
+export const problemKDoc = (cls: string, id: number, meta: Meta) => {
   const lines = {
     title: [`# ${meta.title}`],
     desc: [`## 문제`, ...meta.desc.split('\n')],

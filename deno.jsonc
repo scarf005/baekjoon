@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "query": "deno run --allow-net --allow-write --unstable script/main.ts",
+    "query": "deno run --allow-all --unstable script/main.ts",
     "class": "deno run --allow-net --allow-read --unstable script/class.ts",
     "export": "deno run --allow-read --allow-run --unstable script/export.ts"
   }
