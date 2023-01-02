@@ -1,7 +1,8 @@
-name: Java CI with Gradle
+name: Test
 
 on:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,13 +21,16 @@ jobs:
         cache: gradle
     
     - run: ./gradlew test --no-daemon
+      id: test
       continue-on-error: true
 
+    - run: mkdir -P results-history
+
     - name: html-reporter-github-pages
+      continue-on-error: true
       uses: PavanMudigonda/html-reporter-github-pages@v1.1
       with:
-        test_results: ./build/reports/tests/
-        subfolder: test
+        test_results: ./build/reports/tests/test
         gh_pages: gh-pages
         results_history: results-history
 
@@ -46,3 +50,9 @@ jobs:
         state: success
         sha: ${{ github.event.pull_request.head.sha }}
         target_url: ${{ env.GH_PAGES_URL }}/${{ github.run_number }}
+
+    - name: Fail the build if tests failed
+      if: steps.test.outcome == 'failure'
+      uses: actions/github-script@v3
+      with:
+        script: core.setFailed('Tests failed!')
