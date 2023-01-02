@@ -1,13 +1,17 @@
 import { crawl, get } from './src/crawl.ts'
 import { problemKDoc, testObject, testYaml, urlGen } from './src/template.ts'
-import { brightYellow, brightGreen} from 'https://deno.land/std@0.167.0/fmt/colors.ts'
-const dirGen = (cls: number) => ({
+import {
+  brightYellow,
+  brightGreen,
+} from 'https://deno.land/std@0.167.0/fmt/colors.ts'
+
+const dirGen = (cls: string) => ({
   src: `src/main/kotlin/class${cls}`,
   test: `src/test/kotlin/class${cls}`,
   resources: `src/test/resources`,
 })
 
-const pathGen = (cls: number, id: number) => {
+const pathGen = (cls: string, id: number) => {
   const { src, test, resources } = dirGen(cls)
 
   return {
@@ -26,7 +30,7 @@ const tryWrite = async (path: string, text: string) => {
   }
 }
 
-const problem = async (cls: number, id: number) => {
+const problem = async (cls: string, id: number) => {
   const url = urlGen(id)
   const { src, test, resources } = pathGen(cls, id)
   const { meta, samples } = crawl(await get(url))
@@ -40,18 +44,26 @@ const problem = async (cls: number, id: number) => {
   Promise.all(files.map(([path, text]) => tryWrite(path, text)))
 }
 
+const genFiles = async (cls: string, problems: number[]) => {
+  await Promise.all(
+    Object.values(dirGen(cls)).map(dir => Deno.mkdir(dir, { recursive: true }))
+  )
+  await Promise.all(problems.map(id => problem(cls, id)))
+}
+
 if (import.meta.main) {
-  if (Deno.args.length <= 1) {
-    console.log('class and problem number required')
+  if (Deno.args.length != 1) {
+    console.log('class required')
   } else {
-    const [cls, ...problems] = Deno.args.map(Number)
+    const text = await Deno.readTextFile('class.json')
+    const classes: Record<string, number[]> = JSON.parse(text)
+    const n = Number(Deno.args[0])
+    console.log(`query :: ${n}`)
+    const [normal, essential] = [classes[`${n}ne`], classes[`${n}e`]]
 
-    await Promise.all(
-      Object.values(dirGen(cls)).map(dir =>
-        Deno.mkdir(dir, { recursive: true })
-      )
-    )
-
-    await Promise.all(problems.map(id => problem(cls, id)))
+    await Promise.all([
+      genFiles(`${n}`, normal),
+      genFiles(`${n}e`, essential),
+    ])
   }
 }
