@@ -7,5 +7,5 @@ fun `1978`() {
     readln().split(" ").map(String::toInt).count { it in allPrimes }.let(::println)
 }
 
-fun primes(n: Int) =
+private fun primes(n: Int) =
     (2..n).fold(emptyList<Int>()) { acc, i -> if (acc.none { i % it == 0 }) acc + i else acc }
