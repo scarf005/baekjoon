@@ -1,0 +1,5 @@
+samples:
+  - input: 24 18
+    output: |-
+      6
+      72
