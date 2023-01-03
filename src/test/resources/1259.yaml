@@ -1,0 +1,10 @@
+samples:
+  - input: |-
+      121
+      1231
+      12421
+      0
+    output: |-
+      yes
+      no
+      yes

@@ -1,0 +1,3 @@
+samples:
+  - input: 7 3
+    output: '<3, 6, 2, 7, 5, 1, 4>'
