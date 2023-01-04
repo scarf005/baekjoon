@@ -9,6 +9,7 @@ const extract = (id: number, text: string) =>
   text
     .replace(/package .+/, '')
     .replace(see, '')
+    .replace(/private /g, '')
     .replace(`fun \`${id}\`()`, 'fun main()')
     .trim()
 
