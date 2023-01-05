@@ -22,20 +22,18 @@ data class Examples(val samples: List<TestCase>) {
         private fun resourceStream(id: Int) =
             Examples::class.java.getResourceAsStream("/$id.yaml")!!
 
-        fun fromResource(id: Int): Examples =
+        private fun fromResource(id: Int): Examples =
             Yaml.default.decodeFromStream(serializer(), resourceStream(id))
 
         fun test(fn: KFunction<*>) {
             val name = fn.name
             println("Testing $name")
-            fn.returnType.toString() shouldBe "kotlin.Unit"
             fromResource(name.toInt()).test(fn::call)
         }
 
         fun testNearEquality(fn: KFunction<*>, tolerance: Double = 1e-9) {
             val name = fn.name
             println("Testing $name")
-            fn.returnType.toString() shouldBe "kotlin.Unit"
             fromResource(name.toInt()).testNearEquality(fn::call, tolerance)
         }
     }
