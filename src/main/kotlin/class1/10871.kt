@@ -1,6 +1,6 @@
 package class1
 
-fun nextIntList() = readln().split(" ").map(String::toInt)
+private fun nextIntList() = readln().split(" ").map(String::toInt)
 
 /** [See](https://www.acmicpc.net/problem/10871) */
 fun `10871`() = nextIntList()
