@@ -35,8 +35,7 @@ export const problemKDoc = (cls: string, id: number, meta: Meta) => {
   }
   const all = Object.values(lines).map(section).flat().join('\n')
 
-  return (
-    fmti`
+  return fmti`
       ${packageGen(cls)}
 
       /**
@@ -45,5 +44,4 @@ export const problemKDoc = (cls: string, id: number, meta: Meta) => {
       /** [See](${urlGen(id)}) */
       fun ${idNameGen(id)}() = println()
     ` + '\n'
-  )
 }
