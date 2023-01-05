@@ -1,10 +1,15 @@
 package utils
 
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
+import io.kotest.extensions.system.captureStandardOut
 
 fun mock(input: String, block: () -> Unit): String =
-    captureSystemOut { mockSystemIn(input, block) }
+    captureStandardOut {
+        try {
+            mockSystemIn(input, block)
+        } catch (e: Exception) {
+            e.cause?.stackTraceToString().let(::println)
+        }
+    }
 
 fun String.toOutput() = this.trimIndent() + '\n'
 
@@ -12,21 +17,9 @@ private fun mockSystemIn(input: String, block: () -> Unit) {
     val old = System.`in`
     System.setIn(input.byteInputStream())
 
-    block()
-
-    System.setIn(old)
-}
-
-private fun captureSystemOut(block: () -> Unit): String {
-    val old = System.out
-    val newOut = ByteArrayOutputStream()
-    val printStream = PrintStream(newOut)
-
-    System.setOut(printStream)
-    System.out.flush()
-
-    block()
-
-    System.setOut(old)
-    return newOut.toString()
+    try {
+        block()
+    } finally {
+        System.setIn(old)
+    }
 }
