@@ -3,7 +3,13 @@ package utils
 import io.kotest.extensions.system.captureStandardOut
 
 fun mock(input: String, block: () -> Unit): String =
-    captureStandardOut { mockSystemIn(input, block) }
+    captureStandardOut {
+        try {
+            mockSystemIn(input, block)
+        } catch (e: Exception) {
+            e.cause?.stackTraceToString().let(::println)
+        }
+    }
 
 fun String.toOutput() = this.trimIndent() + '\n'
 
