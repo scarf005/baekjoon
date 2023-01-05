@@ -1,10 +1,11 @@
 package class1e
 
 import io.kotest.core.spec.style.StringSpec
-import utils.Examples
+import utils.TestGen
 
 object _8958KtTest : StringSpec({
+  	val runner = TestGen(::`8958`)
     "example" {
-        Examples.test(::`8958`)
+        runner.fromResource().test()
     }
 })
