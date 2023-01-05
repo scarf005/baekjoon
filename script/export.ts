@@ -4,11 +4,14 @@ import { open } from 'https://deno.land/x/open@v0.0.5/index.ts'
 
 const problems = await recursiveReaddir('src/main/kotlin')
 const see = /\/\*\* \[See\].*\n/
+const desc =
+  /\/\*\*\s*\n\s*\*\s*#[^#]+\n\s*\*\s*##[^#]+\n\s*\*\s*##[^#]+\n\s*\*\s*##[^#]+\n\s*\*\s*\*\//
 
 const extract = (id: number, text: string) =>
   text
     .replace(/package .+/, '')
     .replace(see, '')
+    .replace(desc, '')
     .replace(/private /g, '')
     .replace(`fun \`${id}\`()`, 'fun main()')
     .trim()
