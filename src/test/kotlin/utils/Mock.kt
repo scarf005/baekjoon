@@ -4,13 +4,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
 fun mock(input: String, block: () -> Unit): String =
-    captureStandardOut {
-        try {
-            mockSystemIn(input, block)
-        } catch (e: Exception) {
-            e.cause?.stackTraceToString().let(::println)
-        }
-    }
+    captureSystemOut { mockSystemIn(input, block) }
 
 fun String.toOutput() = this.trimIndent() + '\n'
 
