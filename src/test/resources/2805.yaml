@@ -1,0 +1,9 @@
+samples:
+  - input: |-
+      4 7
+      20 15 10 17
+    output: '15'
+  - input: |-
+      5 20
+      4 42 40 26 46
+    output: '36'

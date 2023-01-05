@@ -1,0 +1,7 @@
+samples:
+  - input: 2 1 5
+    output: '4'
+  - input: 5 1 6
+    output: '2'
+  - input: 100 99 1000000000
+    output: '999999901'

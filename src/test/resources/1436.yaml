@@ -1,0 +1,11 @@
+samples:
+  - input: '2'
+    output: '1666'
+  - input: '3'
+    output: '2666'
+  - input: '6'
+    output: '5666'
+  - input: '187'
+    output: '66666'
+  - input: '500'
+    output: '166699'

@@ -1,0 +1,3 @@
+samples:
+  - input: '13'
+    output: '3'

@@ -1,0 +1,13 @@
+samples:
+  - input: |-
+      5
+      abcde
+    output: '4739715'
+  - input: |-
+      3
+      zzz
+    output: '25818'
+  - input: |-
+      1
+      i
+    output: '9'
