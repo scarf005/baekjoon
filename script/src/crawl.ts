@@ -12,6 +12,7 @@ export const innerTextOfGen =
   (selector: string): string =>
     unescapeHtml(document.querySelector(selector)!.innerText)
       .replace(/\n$/, '')
+      .replaceAll(/\t/, '  ')
       .replaceAll(nbspRegex, ' ') as string
 
 export const crawl = (

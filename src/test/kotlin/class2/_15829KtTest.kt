@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import utils.TestGen
 
 object _15829KtTest : StringSpec({
-  	val runner = TestGen(::`15829`)
+    val runner = TestGen(::`15829`)
     "example" {
         runner.fromResource().test()
     }

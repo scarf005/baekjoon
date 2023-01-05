@@ -15,7 +15,7 @@ export const testObject = (cls: string, id: number) =>
       import utils.TestGen
 
       object _${id}KtTest : StringSpec({
-        	val runner = TestGen(::${idNameGen(id)})
+          val runner = TestGen(::${idNameGen(id)})
           "example" {
               runner.fromResource().test()
           }
@@ -27,15 +27,20 @@ export const testYaml = (samples: Sample[]) => yaml.stringify({ samples })
 const section = (sx: readonly string[]) => sx.map(x => `* ${x}`).concat('*')
 
 export const problemKDoc = (cls: string, id: number, meta: Meta) => {
+  const toMultiline = (s: string) =>
+    s.split('\n').flatMap(x => x.match(/.{1,80}/g) ?? [])
+  const toHeader = (title: string, s: string) => [title, ...toMultiline(s)]
+
   const lines = {
     title: [`# ${meta.title}`],
-    desc: [`## 문제`, ...meta.desc.split('\n')],
-    input: [`## 입력`, ...meta.input.split('\n')],
-    output: [`## 출력`, ...meta.output.split('\n')],
+    desc: toHeader('## 설명', meta.desc),
+    input: toHeader('## 입력', meta.input),
+    output: toHeader('## 출력', meta.output),
   }
   const all = Object.values(lines).map(section).flat().join('\n')
 
-  return fmti`
+  return (
+    fmti`
       ${packageGen(cls)}
 
       /**
@@ -44,4 +49,5 @@ export const problemKDoc = (cls: string, id: number, meta: Meta) => {
       /** [See](${urlGen(id)}) */
       fun ${idNameGen(id)}() = println()
     ` + '\n'
+  )
 }
