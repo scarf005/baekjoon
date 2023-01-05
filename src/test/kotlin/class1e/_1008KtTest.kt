@@ -1,10 +1,11 @@
 package class1e
 
 import io.kotest.core.spec.style.StringSpec
-import utils.Examples
+import utils.TestGen
 
 object _1008KtTest : StringSpec({
+    val runner = TestGen(::`1008`)
     "example" {
-        Examples.testNearEquality(::`1008`)
+        runner.fromResource().testNearEquality(10e-9)
     }
 })
