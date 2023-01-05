@@ -12,11 +12,12 @@ export const testObject = (cls: string, id: number) =>
       ${packageGen(cls)}
 
       import io.kotest.core.spec.style.StringSpec
-      import utils.Examples
+      import utils.TestGen
 
       object _${id}KtTest : StringSpec({
+        	val runner = TestGen(::${idNameGen(id)})
           "example" {
-              Examples.test(::${idNameGen(id)})
+              runner.fromResource().test()
           }
       })
   `
@@ -34,13 +35,15 @@ export const problemKDoc = (cls: string, id: number, meta: Meta) => {
   }
   const all = Object.values(lines).map(section).flat().join('\n')
 
-  return fmti`
+  return (
+    fmti`
       ${packageGen(cls)}
 
       /**
        ${all}
        */
       /** [See](${urlGen(id)}) */
-      fun ${idNameGen(id)}(): Nothing = TODO()
+      fun ${idNameGen(id)}() = println()
     ` + '\n'
+  )
 }
